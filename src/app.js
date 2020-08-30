@@ -16,9 +16,15 @@ app.get("/repositories", (request, response) => {
 app.post("/repositories", (request, response) => {
   const { title, url, techs } = request.body;
 
-  const repository = { id: uuid(), title, url, techs, likes: 0 };
-  repositories.push(repository);
+  const repository = {
+    id: uuid(),
+    title,
+    url,
+    techs,
+    likes: 0,
+  };
 
+  repositories.push(repository);
   return response.json(repository);
 });
 
@@ -31,13 +37,19 @@ app.put("/repositories/:id", (request, response) => {
   );
 
   if (repositoryIndex < 0) {
-    return response.status(400).json({ error: "Bad Request" });
+    return response.status(400).json({ error: "Repository does not exists" });
   }
 
   const likes = repositories[repositoryIndex].likes;
-  const repository = { id, title, url, techs, likes };
-  repositories[repositoryIndex] = repository;
+  const repository = {
+    id,
+    title,
+    url,
+    techs,
+    likes,
+  };
 
+  repositories[repositoryIndex] = repository;
   return response.json(repository);
 });
 
@@ -49,7 +61,7 @@ app.delete("/repositories/:id", (request, response) => {
   );
 
   if (repositoryIndex < 0) {
-    return response.status(400).json({ error: "Bad Request" });
+    return response.status(400).json({ error: "Repository does not exists" });
   }
 
   repositories.splice(repositoryIndex, 1);
@@ -65,14 +77,12 @@ app.post("/repositories/:id/like", (request, response) => {
   );
 
   if (repositoryIndex < 0) {
-    return response.status(400).json({ error: "Bad Request" });
+    return response.status(400).json({ error: "Repository does not exists" });
   }
 
-  const repository = repositories[repositoryIndex];
-  repository.likes += 1;
-  repositories[repositoryIndex] = repository;
+  repositories[repositoryIndex].likes += 1;
 
-  return response.json(repository);
+  return response.json(repositories[repositoryIndex]);
 });
 
 module.exports = app;
